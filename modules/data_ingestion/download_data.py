@@ -6,8 +6,17 @@ from dotenv import load_dotenv, find_dotenv
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def download_kaggle_dataset(dataset_identifier, download_path):
-    # Load environment variables from the .env file
+def download_kaggle_dataset(dataset_identifier: str, download_path: str) -> None:
+    """
+    Downloads a Kaggle dataset to the specified directory.
+
+    Args:
+        dataset_identifier (str): The identifier of the dataset to download.
+        download_path (str): The path to the directory where the dataset should be downloaded.
+
+    Returns:
+        None
+    """
     load_dotenv(find_dotenv())
 
     # Set Kaggle API credentials from environment variables
@@ -29,11 +38,9 @@ def download_kaggle_dataset(dataset_identifier, download_path):
     logging.info(f"Dataset downloaded and extracted to: {download_path}")
 
 if __name__ == "__main__":
-    # Kaggle dataset identifier from the provided URL
+    # Kaggle dataset identifier from https://www.kaggle.com/datasets/nih-chest-xrays/data
     dataset_identifier = 'nih-chest-xrays/data'
 
-    # Path to the custom directory on your storage device
+    # Path to the custom directory on your storage device, modify this for your case if needed
     download_path = 'D:\\BigData'
-
-    # Call the function to download the dataset
     download_kaggle_dataset(dataset_identifier, download_path)
