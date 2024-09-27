@@ -166,3 +166,5 @@ train/train/
 test.ipynb
 
 notebooks/test.ipynb
+notebooks/lung_disease_model_best.pth
+notebooks/lung_disease_model_full.pth
