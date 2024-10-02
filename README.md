@@ -2,6 +2,10 @@
 
 A web interface to detect lung diseases given a chest x-ray image, using an end-to-end ML pipeline in the backend, pulling data from kaggle's [nih-chest-xrays](https://www.kaggle.com/competitions/nih-chest-xrays) dataset. The system detects multiple diseases based on the uploaded X-ray image, utilizing a machine learning model trained on the NIH Chest X-ray Dataset, and is designed with an interactive web interface, making it accessible for healthcare providers.
 
+<div style="overflow: hidden; height: 400px;">
+    <img src="lung_disease_demo.gif" alt="Lung Disease Demo" style="width: 100%; height: auto; object-fit: cover; transform: translateY(11%);">
+</div>
+
 ## Table of Contents
 
 1. [Project Overview](#project-overview)
@@ -11,8 +15,7 @@ A web interface to detect lung diseases given a chest x-ray image, using an end-
 5. [Tech Stack](#tech-stack)
 6. [Architecture](#architecture)
 7. [Future Improvements](#future-improvements)
-8. [Contributing](#contributing)
-9. [License](#license)
+8. [License](#license)
 
 ## Project Overview
 
@@ -43,8 +46,7 @@ The project demonstrates the following:
 - Image Upload: Upload chest X-ray images through a web interface.
 - Disease Detection: Detect multiple lung diseases with confidence scores for each disease.
 - No Findings: If no disease is detected, the system returns "No Findings."
-- API Integration: Backend Flask/FastAPI to process requests and serve model predictions.
-- Simple Frontend: A user-friendly interface built with Streamlit for healthcare providers.
+- Simple Frontend: A user-friendly interface built with Gradio for healthcare providers.
 
 ## Installation
 
@@ -53,8 +55,7 @@ The project demonstrates the following:
 - Python 3.10
 - Conda
 - Kaggle API (to download dataset)
-- Docker (optional, for containerization)
-- AWS account (optional, for deployment)
+- AWS and Docker (optional, for deployment)
 
 ### Step 1: Clone the repository
 
@@ -66,14 +67,14 @@ cd lung-disease-detection
 ### Step 2: Set up the Conda environment
 
 ```bash
-conda create --name chestdetect-ai python=3.10
-conda activate chestdetect-ai
+conda create --name chest-xray-venv python=3.10
+conda activate chest-xray-venv
 ```
 
 ### Step 3: Install dependencies
 
 ```bash
-conda install numpy pandas scikit-learn matplotlib seaborn tensorflow pytorch torchvision flask fastapi streamlit -c conda-forge
+pip install -r requirements.txt
 ```
 
 ### Step 4: Download the dataset from Kaggle
@@ -87,52 +88,47 @@ unzip nih-chest-xrays.zip
 
 ### Step 5: Run the application
 
-To start the web application:
+To start the web application run this from the root:
 
 ```bash
-streamlit run app.py
+python main.py app
 ```
 
 ## Usage
 
 1. Upload an X-ray: Go to the web interface and upload a chest X-ray image.
-2. View Predictions: The system will display the detected diseases (if any) and the confidence score for each class.
-3. Check Logs: Check the terminal or the logs for detailed information on predictions.
+2. View Predictions: The system will display the detected diseases (if any) and the confidence score.
 
 ## Tech Stack
 
-### Backend:
+### Backend
+
 - Python 3.10
-- TensorFlow/PyTorch (for deep learning)
-- Flask/FastAPI (for serving predictions via API)
+- PyTorch (for CNN)
+- Kaggle (for large dataset of real medical imaging dataset)
 
-### Frontend:
-- Streamlit (for web interface)
+### Frontend
 
-### Infrastructure:
+- Gradio (for web interface)
+
+### Infrastructure
+
 - AWS (optional for cloud-based deployment)
 - Docker (optional for containerization)
-- GitHub Actions (optional for CI/CD)
 
 ## Architecture
 
 1. Data Ingestion: Download and preprocess the NIH Chest X-ray dataset.
-2. Model Training: A convolutional neural network (CNN) model is trained to classify 15 lung diseases based on X-ray images.
-3. API Layer: Flask/FastAPI handles image uploads and runs inference with the trained model.
-4. Web Interface: The frontend (Streamlit) allows healthcare providers to interact with the system and view results.
-5. CI/CD: Basic pipeline set up for model retraining when new data is added (optional feature for future improvements).
+2. Model Training: A convolutional neural network (CNN) model is trained to detect if a disease is present or not. If it is, then another CNN predict which of the 15 lung diseases it is.
+3. Web Interface: The frontend (Gradio) allows healthcare providers to interact with the system and view results.
 
 ## Future Improvements
 
-1. Model Optimization: Fine-tune the model on larger datasets and experiment with different architectures (e.g., EfficientNet).
+1. Model Optimization: Fine-tune the model on larger datasets as we only used a subset for now. Also, the second model has not yet been implemented. 
 2. Docker and Kubernetes: Containerize the feature engineering, training, and inference pipelines for scalability.
-3. Advanced Frontend: Enhance the UI/UX of the web interface and add more features (e.g., historical patient data, performance tracking).
+3. Advanced Frontend: Enhance the UI/UX of the web interface and add more features.
 4. CI/CD Pipeline: Automate retraining and model updates using GitHub Actions or AWS CodePipeline.
 5. Monitoring: Add logging and monitoring using AWS CloudWatch or Prometheus.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and create a pull request with your changes. Ensure that your changes pass all tests.
 
 ## License
 
