@@ -29,7 +29,7 @@ class ModelTrainer:
 
         self.logger.info(f"Using device: {self.device}")
 
-    def train_epoch(self, epoch):
+    def train_epoch(self, epoch: int):
         self.model.train()
         running_loss = 0.0
         epoch_start_time = time.time()

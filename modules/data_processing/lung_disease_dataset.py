@@ -1,10 +1,12 @@
 import os
+import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from PIL import Image
+from typing import Optional, Callable
 
 class LungDiseaseDataset(Dataset):
-    def __init__(self, dataframe, img_dir, transform=None):
+    def __init__(self, dataframe: pd.DataFrame, img_dir: str, transform: Optional[Callable] = None):
         self.dataframe = dataframe
         self.img_dir = img_dir
         self.transform = transform
@@ -12,7 +14,7 @@ class LungDiseaseDataset(Dataset):
     def __len__(self):
         return len(self.dataframe)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int):
         """
         This method retrieves the image and label for a given index from the dataset.
         
