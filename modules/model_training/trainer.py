@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import time
-
+import logging
 
 
 class ModelTrainer:
@@ -18,6 +18,16 @@ class ModelTrainer:
         self.criterion = nn.BCEWithLogitsLoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         self.val_accuracies = []
+
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.INFO)
+        if not self.logger.handlers:
+            handler = logging.StreamHandler()
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            handler.setFormatter(formatter)
+            self.logger.addHandler(handler)
+
+        self.logger.info(f"Using device: {self.device}")
 
     def train_epoch(self, epoch):
         self.model.train()
@@ -38,17 +48,18 @@ class ModelTrainer:
             running_loss += loss.item()
             
             if (i + 1) % 10 == 0:  # Print every 10 batches
-                print(f"Epoch [{epoch+1}/{self.num_epochs}], "
-                      f"Batch [{i+1}/{len(self.train_loader)}], "
-                      f"Loss: {loss.item():.4f}, "
-                      f"Batch Time: {time.time() - batch_start_time:.2f}s")
+                self.logger.info(f"Epoch [{epoch+1}/{self.num_epochs}], "
+                                 f"Batch [{i+1}/{len(self.train_loader)}], "
+                                 f"Loss: {loss.item():.4f}, "
+                                 f"Batch Time: {time.time() - epoch_start_time:.2f}s")
+
                 
         epoch_loss = running_loss / len(self.train_loader)
         epoch_time = time.time() - epoch_start_time
         
-        print(f"Epoch [{epoch+1}/{self.num_epochs}] completed, "
-              f"Average Loss: {epoch_loss:.4f}, "
-              f"Epoch Time: {epoch_time:.2f}s")
+        self.logger.info(f"Epoch [{epoch+1}/{self.num_epochs}] completed, "
+                         f"Average Loss: {epoch_loss:.4f}, "
+                         f"Epoch Time: {epoch_time:.2f}s")
         
         return epoch_loss
 
@@ -68,7 +79,7 @@ class ModelTrainer:
                 correct += (predicted == labels).sum().item()
                 
                 if (i + 1) % 10 == 0:  # Print every 10 batches
-                    print(f"Validation Batch [{i+1}/{len(self.val_loader)}] processed")
+                    self.logger.info(f"Validation Batch [{i+1}/{len(self.val_loader)}] processed")
         
         accuracy = 100 * correct / total
         self.val_accuracies.append(accuracy)
@@ -79,9 +90,9 @@ class ModelTrainer:
             train_loss = self.train_epoch(epoch)
             val_loss, val_accuracy = self.validate()
 
-            print(f"Epoch [{epoch+1}/{self.num_epochs}], "
-                  f"Train Loss: {train_loss:.4f}, "
-                  f"Val Loss: {val_loss:.4f}, "
-                  f"Val Accuracy: {val_accuracy:.2f}%")
+            self.logger.info(f"Epoch [{epoch+1}/{self.num_epochs}], "
+                             f"Train Loss: {train_loss:.4f}, "
+                             f"Val Loss: {val_loss:.4f}, "
+                             f"Val Accuracy: {val_accuracy:.2f}%")
         
         return self.model, self.val_accuracies

@@ -3,7 +3,7 @@ from .model import create_model
 from .trainer import ModelTrainer
 import logging
 
-def main():
+def main(num_epochs):
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
 
@@ -16,14 +16,15 @@ def main():
     logger.info("Data Loaders loaded successfully.")
 
     logger.info("Starting training process..")
-    trainer = ModelTrainer(model, device, train_loader, val_loader)
+    trainer = ModelTrainer(model, device, train_loader, val_loader, num_epochs)
     trained_model, val_accuracies = trainer.train()
 
-    torch.save(trained_model.state_dict(), 'artifacts.models/trained_model.pth')
+    torch.save(trained_model.state_dict(), 'artifacts/models/trained_model.pth')
     logger.info("Training completed. Model saved as 'trained_model.pth'")
     logger.info(f"Final validation accuracy: {val_accuracies[-1]:.2f}%")
 
 
 
 if __name__ == "__main__":
-    main()
+    num_epochs = int(input("Enter the number of epochs: "))
+    main(num_epochs=num_epochs)
